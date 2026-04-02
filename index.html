@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visibility Performance Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+
+  @page { size: 11in 8.5in; margin: 0; }
+  :root {
+    --accent: #C43325; --accent-dk: #9E2A1E; --dk: #131313; --ch: #1E1E1E;
+    --wh: #FFFFFF; --lt: #F2F1EF; --gr: #6E6E6E; --gm: #9A9A9A;
+    --gl: #B5B5B5; --bd: #D9D8D5;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',-apple-system,sans-serif; background:#CCCBC8; color:var(--dk); line-height:1.5; -webkit-print-color-adjust:exact!important; print-color-adjust:exact!important; }
+  .slide { width:11in; height:8.5in; background:var(--wh); position:relative; overflow:hidden; page-break-after:always; margin:24px auto; box-shadow:0 8px 40px rgba(0,0,0,.12); }
+  .slide:last-child { page-break-after:avoid; }
+  .si { padding:44px 68px 48px; height:100%; position:relative; z-index:2; }
+  .strip { position:absolute; top:0; right:0; width:36px; height:100%; background:linear-gradient(180deg,var(--accent) 0%,var(--accent-dk) 50%,var(--dk) 100%); z-index:1; }
+  .hero { font-size:64px; font-weight:800; line-height:.95; letter-spacing:-2.5px; }
+  .disp { font-size:42px; font-weight:800; line-height:1; letter-spacing:-1.5px; }
+  .red { color:var(--accent); } .it { font-style:italic; } .b { font-weight:700; } .xb { font-weight:800; }
+  .nav { display:flex; gap:32px; padding-bottom:10px; border-bottom:2px solid var(--dk); margin-bottom:22px; font-size:11px; font-weight:600; }
+  .nav span { color:var(--gl); white-space:nowrap; } .nav .on { color:var(--dk); font-weight:800; }
+  .card { background:var(--lt); border-radius:10px; padding:26px 28px; }
+  .card-dk { background:var(--dk); color:var(--wh); border-radius:10px; padding:26px 28px; }
+  .cl { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--gr); margin-bottom:5px; }
+  .card-dk .cl { color:var(--gm); }
+  .cv { font-size:44px; font-weight:800; line-height:1.1; }
+  .cs { font-size:11px; color:var(--gr); margin-top:3px; }
+  .card-dk .cs { color:var(--gm); }
+  .egrid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .echip { border-radius:10px; padding:22px 18px; color:var(--wh); display:flex; align-items:center; gap:12px; }
+  .eico { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; background:rgba(255,255,255,.18); flex-shrink:0; }
+  .en { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; opacity:.55; }
+  .ec { font-size:30px; font-weight:800; line-height:1.1; }
+  .el { font-size:9px; opacity:.4; }
+  .bg-aim { background:#E84235; } .bg-aio { background:#4285F4; } .bg-gem { background:#7B5EA7; }
+  .bg-cop { background:#6B5CE7; } .bg-per { background:#1A6FE8; } .bg-gpt { background:#0FA67F; }
+  .tbar { background:var(--dk); border-radius:12px; padding:28px 36px; display:flex; align-items:center; justify-content:space-between; color:var(--wh); }
+  .tbar .tv { font-size:54px; font-weight:800; line-height:1; }
+  .tbar .tl { font-size:12px; font-weight:600; opacity:.45; }
+  .tbar .td { font-size:11px; opacity:.4; line-height:1.7; text-align:right; }
+  .ctable { width:100%; border-collapse:collapse; }
+  .ctable th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gr); padding:8px 10px; border-bottom:2px solid var(--dk); text-align:left; }
+  .ctable th.r { text-align:right; }
+  .ctable td { padding:12px 10px; border-bottom:1px solid var(--bd); font-size:12px; }
+  .ctable td.r { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+  .ctable td.bc { font-weight:700; }
+  .ctable tr.hl { background:var(--lt); }
+  .ctable tr.hl td.bc { color:var(--accent); }
+  .ctable tbody tr:last-child td { border-bottom:none; }
+  .dr { display:inline-block; background:var(--dk); color:var(--wh); border-radius:5px; padding:2px 8px; font-size:11px; font-weight:700; min-width:32px; text-align:center; }
+  .dtable { width:100%; border-collapse:collapse; }
+  .dtable th { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gr); padding:7px 10px; border-bottom:2px solid var(--dk); text-align:left; }
+  .dtable th.r { text-align:right; }
+  .dtable td { padding:12px 10px; border-bottom:1px solid var(--bd); font-size:11px; }
+  .dtable td.r { text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+  .dtable td.url { max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--gr); font-size:10px; }
+  .dtable tbody tr:last-child td { border-bottom:none; }
+  .dtable .rn { font-weight:700; color:var(--accent); }
+  .pcard { background:var(--dk); border-radius:14px; padding:32px 28px; color:var(--wh); }
+  .pcard h3 { font-size:24px; font-weight:800; color:var(--accent); margin-bottom:12px; }
+  .pcard p { font-size:14px; line-height:1.55; opacity:.75; }
+  .aeo-point { display:flex; align-items:flex-start; gap:16px; padding:18px 20px; background:var(--lt); border-radius:10px; }
+  .aeo-point .arr { flex-shrink:0; color:var(--accent); font-size:18px; font-weight:800; margin-top:1px; }
+  .aeo-point .apt { font-size:14px; line-height:1.55; }
+  .bar-chart { display:flex; align-items:flex-end; gap:6px; height:120px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; height:100%; justify-content:flex-end; }
+  .bar-fill { width:100%; border-radius:4px 4px 0 0; background:var(--dk); min-height:2px; }
+  .bar-fill.you { background:var(--accent); }
+  .bar-label { font-size:8px; font-weight:700; color:var(--gr); text-align:center; line-height:1.2; }
+  .bar-value { font-size:9px; font-weight:800; }
+  .insight { position:absolute; bottom:0; left:0; right:36px; padding:22px 68px; background:var(--dk); border-top:3px solid var(--accent); font-size:14px; color:rgba(255,255,255,.75); z-index:3; display:flex; align-items:center; gap:12px; }
+  .insight .dot { width:8px; height:8px; border-radius:50%; background:var(--accent); flex-shrink:0; }
+  .insight strong { color:var(--wh); font-weight:700; }
+  @media print { body{background:white;} .slide{margin:0;box-shadow:none;} .no-print{display:none!important;} }
+  .toolbar { position:fixed; top:0; left:0; right:0; z-index:1000; background:var(--dk); padding:12px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 12px rgba(0,0,0,.3); }
+  .toolbar .brand { font-weight:700; color:var(--wh); font-size:14px; }
+  .toolbar .btn { padding:8px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; background:var(--accent); color:var(--wh); }
+  .toolbar .btn:hover { background:var(--accent-dk); }
+  .slides-wrap { padding-top:56px; padding-bottom:40px; }
+
+
+  /* ─── INPUT FORM ─── */
+  #input-screen {
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    padding:40px; background:var(--lt);
+  }
+  .form-card {
+    background:var(--wh); border-radius:16px; padding:48px; max-width:520px; width:100%;
+    box-shadow:0 8px 40px rgba(0,0,0,.08);
+  }
+  .form-card h1 { font-size:28px; font-weight:800; margin-bottom:6px; }
+  .form-card .sub { font-size:14px; color:var(--gr); margin-bottom:32px; }
+  .form-card label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--gr); margin-bottom:6px; margin-top:20px; }
+  .form-card label:first-of-type { margin-top:0; }
+  .form-card input {
+    width:100%; padding:12px 16px; border:2px solid var(--bd); border-radius:8px;
+    font-family:'DM Sans',sans-serif; font-size:15px; outline:none; transition:border-color .2s;
+  }
+  .form-card input:focus { border-color:var(--accent); }
+  .form-card input::placeholder { color:var(--gl); }
+  .form-card .hint { font-size:11px; color:var(--gl); margin-top:4px; }
+  .form-card .btn-generate {
+    margin-top:28px; width:100%; padding:14px; background:var(--accent); color:var(--wh);
+    border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:16px;
+    font-weight:700; cursor:pointer; transition:background .2s;
+  }
+  .form-card .btn-generate:hover { background:var(--accent-dk); }
+  .form-card .btn-generate:disabled { opacity:.5; cursor:not-allowed; }
+  .form-card .error { color:var(--accent); font-size:13px; margin-top:12px; display:none; }
+
+  #loading-screen {
+    min-height:100vh; display:none; align-items:center; justify-content:center;
+    flex-direction:column; gap:16px; background:var(--lt);
+  }
+  .spinner { width:40px; height:40px; border:4px solid var(--bd); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  #loading-screen .status { font-size:14px; color:var(--gr); }
+
+  #deck-screen { display:none; }
+</style>
+</head>
+<body>
+
+<!-- ═══ INPUT FORM ═══ -->
+<div id="input-screen">
+  <div class="form-card">
+    <h1>AI Visibility <span class="red it">Report</span></h1>
+    <div class="sub">Enter a domain to generate a complete AI visibility performance deck.</div>
+    <label>Domain *</label>
+    <input type="text" id="inp-domain" placeholder="example.com" required>
+    <label>Brand Name</label>
+    <input type="text" id="inp-brand" placeholder="e.g. Acme Corp (used for AI mention tracking)">
+    <div class="hint">If blank, the domain will be used as the brand name.</div>
+    <label>Competitors (comma-separated)</label>
+    <input type="text" id="inp-competitors" placeholder="e.g. Competitor A, Competitor B">
+    <div class="hint">Optional. Adds a competitor comparison slide with AI mention data.</div>
+    <button class="btn-generate" id="btn-go" onclick="generateReport()">Generate Report</button>
+    <div class="error" id="form-error"></div>
+  </div>
+</div>
+
+<!-- ═══ LOADING ═══ -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div class="status" id="load-status">Connecting to Ahrefs API...</div>
+</div>
+
+<!-- ═══ DECK (generated dynamically) ═══ -->
+<div id="deck-screen">
+  <div class="toolbar no-print">
+    <span class="brand">AI Visibility Performance Report</span>
+    <div style="display:flex;gap:12px;">
+      <button class="btn" style="background:transparent;border:1px solid rgba(255,255,255,.3);" onclick="resetForm()">New Report</button>
+      <button class="btn" onclick="window.print()">Export to PDF</button>
+    </div>
+  </div>
+  <div class="slides-wrap" id="slides-container"></div>
+</div>
+
+<script>
+// ─── HELPERS ───
+function fmt(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(2).replace(/\.?0+$/,'') + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'K';
+  return n.toLocaleString();
+}
+function fmtDollar(n) {
+  if (n >= 1000000) return '$' + (n/100/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return '$' + (n/100/1000).toFixed(1) + 'K';
+  return '$' + (n/100).toFixed(0);
+}
+function pct(part, total) { return total > 0 ? Math.round(part/total*100) : 0; }
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function pathOnly(url) { try { return new URL(url).pathname; } catch(e) { return url; } }
+function pageName(url) {
+  const p = pathOnly(url).replace(/^\/|\/$|\.[a-z]+$/g,'');
+  if (!p) return 'Homepage';
+  const last = p.split('/').pop();
+  return last.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+}
+
+const NAV_ITEMS = ['Home','The Shift','AI Visibility','Competitors','SEO Health','Top Pages','SEO vs AEO','The Solution','Packages','Next Steps'];
+function nav(active) {
+  return '<nav class="nav">' + NAV_ITEMS.map(n =>
+    `<span${n===active?' class="on"':''}>${n}</span>`
+  ).join('') + '</nav>';
+}
+
+// ─── SLIDE BUILDERS ───
+function slideCover(d) {
+  return `<div class="slide"><div class="strip"></div>
+  <div class="si" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="hero"><span style="color:var(--dk)">AI Visibility</span><br><span class="red it">Performance Report</span></div>
+    <div style="margin-top:20px;font-size:18px;color:var(--gr);">Prepared for <span class="b" style="color:var(--dk)">${escHtml(d.domain)}</span></div>
+    <div style="margin-top:8px;font-size:13px;color:var(--gl);">${new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})}</div>
+    <div style="position:absolute;bottom:0;left:0;right:36px;height:200px;background:linear-gradient(135deg,var(--dk) 0%,var(--ch) 100%);border-radius:48px 0 0 0;"></div>
+  </div></div>`;
+}
+
+function slideAEO() {
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('The Shift')}
+  <div class="disp"><span style="color:var(--dk)">Search Has </span><span class="red it">Changed</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;max-width:660px;">AI engines now answer questions directly. Brands not optimized for AI visibility are becoming invisible to the fastest-growing search channels.</p>
+  <div style="display:flex;flex-direction:column;gap:18px;margin-top:24px;">
+    <div class="aeo-point"><span class="arr">&#10095;&#10095;</span><div class="apt"><strong>80% of consumers rely on "zero-click" results</strong> (AI summaries and featured snippets) for at least 40% of their searches. Users get answers without visiting a website.</div></div>
+    <div class="aeo-point"><span class="arr">&#10095;&#10095;</span><div class="apt">As of 2026, <strong>AI Overviews grew 58% in one year</strong>, appearing in over 25% of all searches. Google AI Mode is rolling out as the default experience for millions.</div></div>
+    <div class="aeo-point"><span class="arr">&#10095;&#10095;</span><div class="apt">The shift from <strong>"searching for links" to "asking for plans"</strong> means brands need to be the answer, not just a result. This requires a new framework: <strong>Answer Engine Optimization (AEO)</strong>.</div></div>
+  </div>
+  <div style="display:flex;gap:16px;margin-top:24px;">
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:28px;font-weight:800;color:var(--accent);">58%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">AI Overview growth YoY</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:28px;font-weight:800;color:var(--accent);">25%+</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Searches show AI answers</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:28px;font-weight:800;color:var(--accent);">80%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Users rely on zero-click</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:28px;font-weight:800;color:var(--accent);">1,200%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">AI query surge in some verticals</div></div>
+  </div>
+  <div class="insight"><div class="dot"></div>If your brand isn't in the AI answer, <strong>your competitors are getting that customer instead.</strong></div>
+  </div></div>`;
+}
+
+function slideAIVisibility(d) {
+  const m = d.aiMentions;
+  const engines = [
+    {name:'Google AI Mode', cls:'bg-aim', icon:'G', count:m.aiMode},
+    {name:'AI Overviews', cls:'bg-aio', icon:'G', count:m.aio},
+    {name:'Gemini', cls:'bg-gem', icon:'&#10022;', count:m.gemini},
+    {name:'Copilot', cls:'bg-cop', icon:'C', count:m.copilot},
+    {name:'Perplexity', cls:'bg-per', icon:'P', count:m.perplexity},
+    {name:'ChatGPT', cls:'bg-gpt', icon:'&#11042;', count:m.chatgpt},
+  ];
+  const top = engines[0];
+  const topPct = pct(top.count, m.total);
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('AI Visibility')}
+  <div class="disp"><span style="color:var(--dk)">AI </span><span class="red it">Visibility</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;">How AI engines reference and recommend <strong>${escHtml(d.domain)}</strong> across major platforms.</p>
+  <div class="egrid" style="margin-top:22px;">
+    ${engines.map(e => `<div class="echip ${e.cls}"><div class="eico">${e.icon}</div><div><div class="en">${e.name}</div><div class="ec">${fmt(e.count)}</div><div class="el">mentions</div></div></div>`).join('')}
+  </div>
+  <div class="tbar" style="margin-top:22px;">
+    <div><div class="tl">TOTAL AI MENTIONS</div><div class="tv">${fmt(m.total)}</div></div>
+    <div class="td">${top.name} dominates with ${topPct}% of all mentions<br>Conversational AI platforms account for the remaining ${100-topPct}%</div>
+  </div>
+  <div class="insight"><div class="dot"></div>You're being mentioned, but <strong>diversifying AI presence beyond Google surfaces is critical for long-term visibility.</strong></div>
+  </div></div>`;
+}
+
+function slideCompetitors(d) {
+  if (!d.competitorMentions) {
+    return `<div class="slide"><div class="strip"></div><div class="si">
+    ${nav('Competitors')}
+    <div class="disp"><span style="color:var(--dk)">Competitor </span><span class="red it">Gap</span></div>
+    <p style="font-size:16px;color:var(--gr);margin-top:12px;">Enter competitor brand names when generating the report to see how your AI visibility compares.</p>
+    </div></div>`;
+  }
+  // Build competitor comparison data
+  const cm = d.competitorMentions;
+  const brands = {};
+  ['chatgpt','aio','aiMode'].forEach(engine => {
+    const metrics = cm[engine]?.metrics || [];
+    metrics.forEach(m => {
+      if (!brands[m.brand]) brands[m.brand] = {chatgpt:0,aio:0,aiMode:0,total:0};
+      brands[m.brand][engine] = m.total || 0;
+    });
+  });
+  Object.values(brands).forEach(b => b.total = b.chatgpt + b.aio + b.aiMode);
+  const sorted = Object.entries(brands).sort((a,b) => b[1].total - a[1].total);
+  const maxTotal = sorted.length > 0 ? sorted[0][1].total : 1;
+  const myBrand = d.brand;
+  const myTotal = brands[myBrand]?.total || d.aiMentions.total;
+  const topComp = sorted.find(([name]) => name !== myBrand);
+  const gap = topComp ? Math.round(topComp[1].total / Math.max(myTotal,1)) : 0;
+
+  const rows = sorted.map(([name, b]) => {
+    const isMe = name === myBrand;
+    return `<tr${isMe?' class="hl"':''}><td class="bc">${isMe ? escHtml(d.domain) : escHtml(name)}</td><td class="r">${fmt(b.chatgpt)}</td><td class="r">${fmt(b.aio)}</td><td class="r">${fmt(b.aiMode)}</td><td class="r xb"${isMe?' style="color:var(--accent);"':''}>${fmt(b.total)}</td></tr>`;
+  }).join('');
+
+  const bars = sorted.map(([name, b]) => {
+    const isMe = name === myBrand;
+    const h = Math.max(Math.round(b.total/maxTotal*100), 2);
+    return `<div class="bar-col"><div class="bar-value"${isMe?' style="color:var(--accent);"':''}>${fmt(b.total)}</div><div class="bar-fill${isMe?' you':''}" style="height:${h}%;"></div><div class="bar-label"${isMe?' style="color:var(--accent);font-weight:800;"':''}>${isMe?'You':escHtml(name)}</div></div>`;
+  }).join('');
+
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('Competitors')}
+  <div class="disp"><span style="color:var(--dk)">Competitor </span><span class="red it">Gap</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;">How <strong>${escHtml(d.domain)}</strong> stacks up against competitors in AI-driven search.</p>
+  <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:28px;margin-top:22px;">
+    <div><table class="ctable"><thead><tr><th>Brand</th><th class="r">ChatGPT</th><th class="r">AI Overviews</th><th class="r">AI Mode</th><th class="r">Total</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gr);margin-bottom:8px;">Total AI Mentions</div>
+      <div class="bar-chart" style="height:200px;">${bars}</div>
+      ${gap > 1 ? `<div style="margin-top:16px;background:var(--lt);border-radius:10px;padding:14px 18px;"><div style="font-size:12px;font-weight:700;margin-bottom:3px;">The Gap</div><div style="font-size:11px;color:var(--gr);line-height:1.5;">Your top competitor has <span class="b red">${gap}x more AI mentions</span> than you. Every missed mention is a potential customer getting directed to a competitor by AI.</div></div>` : ''}
+    </div>
+  </div>
+  <div class="insight"><div class="dot"></div>Every AI mention your competitor earns is <strong>a potential customer who never sees your brand.</strong></div>
+  </div></div>`;
+}
+
+function slideSEOHealth(d) {
+  const s = d.seo;
+  const compRows = d.organicCompetitors.slice(0,3).map(c =>
+    `<div class="card" style="text-align:center;padding:16px;"><div style="font-size:22px;font-weight:800;">${fmt(c.commonKeywords)}</div><div class="cs">Keywords shared with ${escHtml(c.domain)}</div></div>`
+  ).join('');
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('SEO Health')}
+  <div class="disp"><span style="color:var(--dk)">SEO </span><span class="red it">Health</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;">Core SEO metrics and backlink authority for <strong>${escHtml(d.domain)}</strong></p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px;">
+    <div class="card-dk"><div class="cl">Domain Rating</div><div class="cv" style="color:var(--accent);font-size:56px;">${Math.round(s.domainRating)}</div><div class="cs">${s.ahrefsRank ? 'Ahrefs Rank #'+fmt(s.ahrefsRank) : ''}</div></div>
+    <div class="card"><div class="cl">Organic Traffic</div><div class="cv">${fmt(s.orgTraffic)}</div><div class="cs">Monthly visits (US)</div></div>
+    <div class="card"><div class="cl">Organic Keywords</div><div class="cv">${fmt(s.orgKeywords)}</div><div class="cs">${fmt(s.orgKeywords1to3)} in the Top 3</div></div>
+    <div class="card"><div class="cl">Backlinks</div><div class="cv">${fmt(s.liveBacklinks)}</div><div class="cs">${fmt(s.liveRefdomains)} referring domains</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+    <div class="card"><div class="cl">Traffic Value</div><div class="cv" style="color:var(--accent);font-size:34px;">${fmtDollar(s.orgCost)}</div><div class="cs">Estimated monthly value of organic traffic</div></div>
+    <div class="card"><div class="cl">All-Time Backlinks</div><div class="cv" style="font-size:34px;">${fmt(s.allTimeBacklinks)}</div><div class="cs">Total backlinks from ${fmt(s.allTimeRefdomains)} domains ever</div></div>
+  </div>
+  ${d.organicCompetitors.length > 0 ? `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px;">${compRows}</div>` : ''}
+  <div class="insight"><div class="dot"></div>Strong SEO foundations give you a head start. <strong>The next step is translating that authority into AI visibility.</strong></div>
+  </div></div>`;
+}
+
+function slideTopPages(d) {
+  const rows = d.topPages.map((p,i) =>
+    `<tr><td class="rn">${i+1}</td><td class="b">${escHtml(pageName(p.url))}</td><td class="url">${escHtml(pathOnly(p.url))}</td><td class="r">${fmt(p.traffic)}</td><td class="r">${fmt(p.keywords)}</td><td>${escHtml(p.topKeyword)}</td><td class="r">${fmt(p.topKeywordVolume)}</td></tr>`
+  ).join('');
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('Top Pages')}
+  <div class="disp"><span style="color:var(--dk)">Top </span><span class="red it">Pages</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;">Highest-traffic pages driving organic visibility for <strong>${escHtml(d.domain)}</strong></p>
+  <table class="dtable" style="margin-top:20px;">
+    <thead><tr><th style="width:28px;">#</th><th>Page</th><th>Path</th><th class="r">Traffic</th><th class="r">Keywords</th><th>Top Keyword</th><th class="r">Volume</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>
+  <div class="insight"><div class="dot"></div>These high-traffic pages are your best candidates for AI optimization. <strong>They already carry the authority signals AI systems value.</strong></div>
+  </div></div>`;
+}
+
+function slideSEOvsAEO() {
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('SEO vs AEO')}
+  <div class="disp"><span style="color:var(--dk)">Traditional SEO </span><span class="red it">Isn't Enough</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;max-width:640px;">When AI Overviews appear, the top organic result loses about 34% of its clicks. Users are 47% less likely to click any link. You need to be the answer, not just a result.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+    <div class="card" style="padding:28px;">
+      <div style="font-size:20px;font-weight:800;margin-bottom:16px;">Traditional SEO</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--bd);">Optimizes for SERPs and 10 blue links</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--bd);">Focuses on keywords, backlinks, and technical site health</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--bd);">Drives traffic through clicks from organic listings</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--bd);">Success measured by rankings and click-through rate</div>
+      </div>
+    </div>
+    <div class="card-dk" style="padding:28px;">
+      <div style="font-size:20px;font-weight:800;color:var(--accent);margin-bottom:16px;">Answer Engine Optimization</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Optimizes for visibility in AI-generated responses</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Focuses on credibility, citations, and semantic relevance</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Drives brand mentions and authority within conversational outputs</div>
+        <div style="font-size:13px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Success measured by AI mentions, share of voice, and citation frequency</div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;gap:14px;margin-top:18px;">
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:24px;font-weight:800;color:var(--accent);">34%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Click loss when AI Overviews appear</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:24px;font-weight:800;color:var(--accent);">47%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Less likely to click any link</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:24px;font-weight:800;color:var(--accent);">9.3x</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Higher conversion from AI traffic</div></div>
+    <div class="card" style="flex:1;text-align:center;padding:16px;"><div style="font-size:24px;font-weight:800;color:var(--accent);">60%</div><div style="font-size:10px;color:var(--gr);font-weight:600;">Traffic drops seen by some sites</div></div>
+  </div>
+  <div class="insight"><div class="dot"></div>Traditional SEO alone can't protect your traffic as AI answers grow. <strong>AEO is the missing layer.</strong></div>
+  </div></div>`;
+}
+
+function slideSolution() {
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('The Solution')}
+  <div class="disp"><span style="color:var(--dk)">AI </span><span class="red it">Discover</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;max-width:640px;">A managed visibility program that builds the authority signals AI and Google use to recommend your brand. Every component works together to close the visibility gap.</p>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:24px;">
+    <div class="card-dk" style="padding:22px;"><div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:10px;">Link Building</div><p style="font-size:11px;line-height:1.5;opacity:.75;">High-quality, niche-relevant backlinks from trusted publications that signal authority to both AI and Google.</p></div>
+    <div class="card-dk" style="padding:22px;"><div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:10px;">Content Optimization</div><p style="font-size:11px;line-height:1.5;opacity:.75;">Keep content current, structured, and aligned with how AI models summarize information and surface answers.</p></div>
+    <div class="card-dk" style="padding:22px;"><div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:10px;">Digital PR</div><p style="font-size:11px;line-height:1.5;opacity:.75;">Authoritative mentions in reputable media that strengthen credibility and build the citations AI systems trust.</p></div>
+    <div class="card-dk" style="padding:22px;"><div style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:10px;">Reputation Management</div><p style="font-size:11px;line-height:1.5;opacity:.75;">Consistent reviews and ratings across 70+ platforms that influence AI recommendations and customer decisions.</p></div>
+  </div>
+  <div style="margin-top:18px;background:var(--lt);border-radius:12px;padding:24px 28px;">
+    <div style="font-size:16px;font-weight:800;margin-bottom:12px;">Why It Works</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;">Trusted Signals That Compound</div><div style="font-size:11px;color:var(--gr);">Links, PR, and reviews build credibility across the web. Every signal strengthens the next.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;">Content AI Understands</div><div style="font-size:11px;color:var(--gr);">Optimized pages align with how AI interprets expertise, relevance, and authority.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;">Faster Customer Conversion</div><div style="font-size:11px;color:var(--gr);">AI-referred visitors convert at 7-10x the rate of traditional organic traffic.</div></div></div>
+      <div style="display:flex;gap:10px;align-items:flex-start;"><div style="width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;"></div><div><div style="font-size:12px;font-weight:700;">Sustainable Growth</div><div style="font-size:11px;color:var(--gr);">Same fundamentals as SEO, measured through the lens of AI visibility. Results compound over time.</div></div></div>
+    </div>
+  </div>
+  <div class="insight"><div class="dot"></div>AI Discover builds every signal — links, content, PR, reputation — <strong>that AI uses to decide who gets recommended.</strong></div>
+  </div></div>`;
+}
+
+function slidePackages() {
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('Packages')}
+  <div class="disp"><span style="color:var(--dk)">AI Discover </span><span class="red it">Packages</span></div>
+  <table style="width:100%;border-collapse:collapse;margin-top:20px;font-size:10.5px;">
+    <thead><tr>
+      <th style="text-align:left;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gr);padding:8px 8px;border-bottom:2px solid var(--dk);width:14%;">Feature Category</th>
+      <th style="text-align:left;font-size:9px;font-weight:700;padding:8px 8px;border-bottom:2px solid var(--dk);width:21.5%;">Tier 1 <span class="it">AI Brand Defense</span></th>
+      <th style="text-align:left;font-size:9px;font-weight:700;padding:8px 8px;border-bottom:2px solid var(--dk);width:21.5%;">Tier 2 <span class="it">Growth &amp; Visibility</span></th>
+      <th style="text-align:left;font-size:9px;font-weight:700;padding:8px 8px;border-bottom:2px solid var(--dk);width:21.5%;">Tier 3 <span class="it">Authority Leader</span></th>
+      <th style="text-align:left;font-size:9px;font-weight:700;padding:8px 8px;border-bottom:2px solid var(--dk);width:21.5%;">Tier 4 <span class="it">Market Dominance</span></th>
+    </tr></thead>
+    <tbody>
+      <tr><td style="padding:14px 8px;border-bottom:1px solid var(--bd);font-weight:700;vertical-align:top;">On-Site Ops</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Web Copy Optimization (500 words)<br>1x Content Refresh (1,000 words)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">2x Web Copy Optimization (500 words)<br>2x Content Refresh (1,500 words)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">2x Web Copy Optimization (500 words)<br>2x Content Refresh (500 words)<br>4x Content Refresh (1,500 words)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">5x Web Copy Optimization (500 words)<br>4x Content Refresh (2,000 words)</td></tr>
+      <tr><td style="padding:14px 8px;border-bottom:1px solid var(--bd);font-weight:700;vertical-align:top;">Backlink Authority</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Authoritative Link Insertion (DR 45+)<br>1x Exclusive Media Links (DR 30+)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Authoritative Link Insertion (DR 45+)<br>2x Exclusive Media Links (DR 30+)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Authoritative Link Insertion (DR 60+)<br>2x Exclusive Media Links (DR 30+)<br>2x Exclusive Media Links (DR 60+)</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Authoritative Link Insertion (DR 60+)<br>4x Exclusive Media Links (DR 30+)<br>5x Exclusive Media Links (DR 60+)</td></tr>
+      <tr><td style="padding:14px 8px;border-bottom:1px solid var(--bd);font-weight:700;vertical-align:top;">Digital PR / News</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Press Plus General</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Digital PR Placement<br>1x Press Plus General<br>1x Press Plus Silver</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">1x Digital PR Placement<br>1x Press Plus Silver<br>1x Press Plus Gold</td><td style="padding:14px 8px;border-bottom:1px solid var(--bd);vertical-align:top;line-height:1.7;">4x Digital PR Placements<br>2x Press Plus Silver<br>2x Press Plus Gold</td></tr>
+      <tr><td style="padding:14px 8px;font-weight:700;vertical-align:top;">Content Creation</td><td style="padding:14px 8px;vertical-align:top;line-height:1.7;">1x Blog Posts (1,000 words)</td><td style="padding:14px 8px;vertical-align:top;line-height:1.7;">3x Blog Posts (1,000 words)</td><td style="padding:14px 8px;vertical-align:top;line-height:1.7;">2x Blog Posts (1,000 words)<br>2x Blogger Pro Post (1,500 words)</td><td style="padding:14px 8px;vertical-align:top;line-height:1.7;">5x Blogger Pro Post (1,500 words)</td></tr>
+    </tbody>
+  </table>
+  <div class="insight"><div class="dot"></div>Each tier is designed to match the level of competition in your market. <strong>Your account manager will recommend the right fit based on your audit data.</strong></div>
+  </div></div>`;
+}
+
+function slideNextSteps(d) {
+  return `<div class="slide"><div class="strip"></div><div class="si">
+  ${nav('Next Steps')}
+  <div class="disp"><span style="color:var(--dk)">Get Started with</span><br><span class="red it">AI Discover</span></div>
+  <p style="font-size:14px;color:var(--gr);margin-top:6px;max-width:600px;">Your competitors are already showing up in AI answers. Close the gap and start being the brand AI recommends.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:24px;">
+    <div class="card-dk" style="padding:28px;">
+      <div style="font-size:18px;font-weight:800;color:var(--accent);margin-bottom:14px;">What You Get</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:12px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Dedicated Client Success Manager with unlimited consultations</div>
+        <div style="font-size:12px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Strategic link building and authority backlinks from DR 45-60+ domains</div>
+        <div style="font-size:12px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Content optimization and refresh aligned for AI discoverability</div>
+        <div style="font-size:12px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Digital PR placements in reputable editorial outlets</div>
+        <div style="font-size:12px;line-height:1.5;padding:8px 12px;border-left:3px solid var(--accent);">Monthly AI visibility reporting and performance tracking</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="padding:24px;margin-bottom:14px;text-align:center;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gr);margin-bottom:8px;">The Opportunity</div>
+        <div style="font-size:14px;line-height:1.6;">AI-referred visitors convert at <span class="xb red">7-10x</span> the rate of traditional organic traffic. Brands that invest now build a compounding advantage their competitors can't easily replicate.</div>
+      </div>
+      <div style="display:flex;gap:14px;">
+        <div class="card" style="flex:1;text-align:center;padding:20px;"><div style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Step 1</div><div style="font-size:15px;font-weight:800;">Confirm</div><div style="font-size:10px;color:var(--gr);margin-top:3px;">Review tier recommendation</div></div>
+        <div class="card" style="flex:1;text-align:center;padding:20px;"><div style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Step 2</div><div style="font-size:15px;font-weight:800;">Execute</div><div style="font-size:10px;color:var(--gr);margin-top:3px;">Commit to the campaign</div></div>
+        <div class="card" style="flex:1;text-align:center;padding:20px;"><div style="font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Step 3</div><div style="font-size:15px;font-weight:800;">Onboard</div><div style="font-size:10px;color:var(--gr);margin-top:3px;">Kickoff with your manager</div></div>
+      </div>
+      <div style="margin-top:14px;background:var(--accent);border-radius:10px;padding:20px;text-align:center;color:var(--wh);">
+        <div style="font-size:16px;font-weight:800;">Book Your Free Strategy Call Today</div>
+        <div style="font-size:12px;opacity:.8;margin-top:4px;">Start showing up where decisions are made.</div>
+      </div>
+    </div>
+  </div>
+  </div></div>`;
+}
+
+// ─── MAIN FLOW ───
+async function generateReport() {
+  const domain = document.getElementById('inp-domain').value.trim().replace(/^https?:\/\//,'').replace(/\/$/,'');
+  const brand = document.getElementById('inp-brand').value.trim();
+  const competitors = document.getElementById('inp-competitors').value.trim();
+
+  if (!domain) {
+    document.getElementById('form-error').style.display = 'block';
+    document.getElementById('form-error').textContent = 'Please enter a domain.';
+    return;
+  }
+
+  document.getElementById('input-screen').style.display = 'none';
+  document.getElementById('loading-screen').style.display = 'flex';
+
+  const statuses = ['Pulling domain rating...','Fetching AI mention data...','Analyzing competitors...','Building your deck...'];
+  let si = 0;
+  const statusEl = document.getElementById('load-status');
+  const interval = setInterval(() => { si = Math.min(si+1, statuses.length-1); statusEl.textContent = statuses[si]; }, 3000);
+
+  try {
+    const params = new URLSearchParams({ domain });
+    if (brand) params.set('brand', brand);
+    if (competitors) params.set('competitors', competitors);
+
+    const res = await fetch('/.netlify/functions/ahrefs-data?' + params.toString());
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'API request failed');
+    }
+    const data = await res.json();
+    clearInterval(interval);
+
+    // Render all slides
+    const container = document.getElementById('slides-container');
+    container.innerHTML = [
+      slideCover(data),
+      slideAEO(),
+      slideAIVisibility(data),
+      slideCompetitors(data),
+      slideSEOHealth(data),
+      slideTopPages(data),
+      slideSEOvsAEO(),
+      slideSolution(),
+      slidePackages(),
+      slideNextSteps(data),
+    ].join('');
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('deck-screen').style.display = 'block';
+
+  } catch (err) {
+    clearInterval(interval);
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('input-screen').style.display = 'flex';
+    document.getElementById('form-error').style.display = 'block';
+    document.getElementById('form-error').textContent = 'Error: ' + err.message;
+  }
+}
+
+function resetForm() {
+  document.getElementById('deck-screen').style.display = 'none';
+  document.getElementById('input-screen').style.display = 'flex';
+  document.getElementById('slides-container').innerHTML = '';
+}
+</script>
+</body>
+</html>
