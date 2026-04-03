@@ -485,7 +485,7 @@ async function generateReport() {
     if (brand) params.set('brand', brand);
     if (competitors) params.set('competitors', competitors);
 
-    const res = await fetch('/.netlify/functions/ahrefs-data' + params.toString());
+    const res = await fetch('/.netlify/functions/ahrefs-data?' + params.toString());
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.error || 'API request failed');
